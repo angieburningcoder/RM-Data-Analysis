@@ -145,6 +145,18 @@ dl.crit dd.std { color: var(--ink); text-align: right; }
 .mk { font-style: normal; font-family: var(--f-body); font-size: 11.5px; margin-left: 3px; }
 .mk.ok { color: var(--pos); } .mk.mid { color: var(--muted); } .mk.no { color: var(--neg); }
 
+td.wrap { white-space: normal; min-width: 15em; color: var(--ink-2); }
+td a, .backup a { color: var(--pos); text-decoration: none; border-bottom: 1px solid var(--pos-soft); }
+td a:hover, .backup a:hover { border-bottom-color: var(--pos); }
+.backup { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 13.5px; color: var(--ink-2); }
+.qa { display: grid; gap: 10px; font-size: 13.5px; }
+.qa p { margin: 0; color: var(--ink-2); }
+.qa b { color: var(--ink); font-weight: 500; }
+.slide-tag { font-family: var(--f-num); font-size: 11px; padding: 0 8px; border-radius: 999px; background: var(--pos-soft); color: var(--pos); margin-left: 6px; }
+.slide-tag.bk { background: var(--line); color: var(--muted); }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
 ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; display: grid; gap: 4px; }
 
 #tip {
@@ -185,32 +197,96 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
     </div>
   </header>
 
+  <!-- 簡報架構 -->
+  <section class="chap" id="deck">
+    <h2>簡報架構 <small>10/28 · 15 MIN + 5 MIN Q&amp;A</small></h2>
+    <figure class="card">
+      <div class="ft"><h3>簡報頁面規劃</h3><span class="fig-no">繳件 10/26 12:00</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>頁</th><th>主題</th><th>時間</th><th>要講的重點</th><th>對應圖表</th><th>狀態</th></tr></thead>
+          <tbody>
+            <tr><td class="n">P1</td><td>封面</td><td class="n">0:15</td><td class="wrap">題目、組別與組員</td><td>—</td><td><span class="pill no">✗ 待製作</span></td></tr>
+            <tr><td class="n">P2</td><td>背景與管理問題</td><td class="n">1:00</td><td class="wrap">高齡化與運動推廣、揮汗有禮活動內容、為何要了解未參與者</td><td>—</td><td><span class="pill no">✗ 待製作</span></td></tr>
+            <tr><td class="n">P3</td><td>研究問題與模型</td><td class="n">1:30</td><td class="wrap">RQ1、H1–H5、TAM 與休閒阻礙理論</td><td>Figma 模型圖</td><td><span class="pill mid">△ IC 改為體能與自我效能</span></td></tr>
+            <tr><td class="n">P4</td><td>構面與題項來源</td><td class="n">1:00</td><td class="wrap">六個構面的定義、題數與參考文獻</td><td>—</td><td><span class="pill no">✗ 待製作</span></td></tr>
+            <tr><td class="n">P5</td><td>樣本與資料收集</td><td class="n">1:00</td><td class="wrap">目標母體與篩選題、9/30–10/7 透過親友發放、便利與滾雪球抽樣、前測修改</td><td><a href="#fig1">圖 1</a></td><td><span class="pill mid">△ 補前測內容</span></td></tr>
+            <tr><td class="n">P6</td><td>受訪者輪廓</td><td class="n">0:45</td><td class="wrap">年齡集中 35–54 歲，七成每週運動 2 次以下</td><td><a href="#fig2a">圖 2a</a>、<a href="#fig2b">2b</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P7</td><td>活動現況</td><td class="n">1:15</td><td class="wrap">兩成沒聽過活動、社群與親友是主要管道、偏好超商禮券、沒時間是最大阻礙</td><td><a href="#fig3a">圖 3a</a>–<a href="#fig3d">3d</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P8</td><td>信效度</td><td class="n">1:00</td><td class="wrap">α、CR、AVE 與 KMO，CFA 配適度一句帶過</td><td><a href="#tab1">表 1</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P9</td><td>模型結果</td><td class="n">2:00</td><td class="wrap">R² = .528，H1–H3 支持，H4、H5 不支持</td><td><a href="#fig5">圖 5</a>、<a href="#tab3">表 3</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P10</td><td>影響力排序與調節</td><td class="n">1:00</td><td class="wrap">SN &gt; PEOU &gt; PB，內在阻礙沒有削弱獎勵效果</td><td><a href="#fig6">圖 6</a>、<a href="#fig7">圖 7</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P11</td><td>組間比較</td><td class="n">1:00</td><td class="wrap">越了解活動越想參加，有用紀錄工具者意願較高</td><td><a href="#fig8">圖 8</a>、<a href="#fig9">圖 9</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P12</td><td>管理建議</td><td class="n">2:00</td><td class="wrap">深講揪團機制、簡化流程、社群宣傳三條，其餘帶過</td><td><a href="#recs">建議區</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+            <tr><td class="n">P13</td><td>限制與結論</td><td class="n">0:45</td><td class="wrap">單題意願、便利抽樣、未測隱私疑慮，最後一句話總結</td><td><a href="#limits">限制區</a></td><td><span class="pill ok">✓ 可直接用</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>總長約 14.5 分鐘。P6 之後可直接使用本頁圖表，P1–P4 需另外製作，P3、P5 要補修。下方每張圖右上角的標籤對應簡報頁碼</figcaption>
+    </figure>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>評分標準檢查</h3><span class="fig-no">各占 25%</span></div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>項目</th><th>目前狀況</th><th>待補</th></tr></thead>
+            <tbody>
+              <tr><td>架構與轉場</td><td class="wrap">結果到建議的順序清楚</td><td class="wrap">每段開頭加一句轉場</td></tr>
+              <tr><td>圖表與輔助素材</td><td class="wrap">結果類圖表齊全並標示數值</td><td class="wrap">P2–P4 的圖</td></tr>
+              <tr><td>結論與發現</td><td class="wrap">每條建議都對應 β 與 p 值</td><td class="wrap">只深講三條建議</td></tr>
+              <tr><td>台風與互動</td><td class="wrap">—</td><td class="wrap">分配講者、排練計時</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>備用頁</h3><span class="fig-no"><span class="slide-tag bk">備用</span></span></div>
+        <ul class="backup">
+          <li><a href="#fig2c">圖 2c</a> 職業類別</li>
+          <li><a href="#fig2d">圖 2d</a> 運動紀錄工具（回答圖 9 的背景）</li>
+          <li><a href="#fig4">圖 4</a> 相關矩陣與區別效度</li>
+          <li><a href="#tab2">表 2</a> CFA 配適度</li>
+          <li><a href="#fig10">圖 10</a> 運動頻率與內在阻礙</li>
+        </ul>
+        <figcaption>正文不放，Q&amp;A 被問到時再切過去</figcaption>
+      </figure>
+    </div>
+    <figure class="card">
+      <div class="ft"><h3>Q&amp;A 預備</h3></div>
+      <div class="qa">
+        <p><b>參與意願只有一題，怎麼確定測到的是意願？</b><br>承認是研究限制，說明以該題作為代理指標，後續研究將改用多題量表</p>
+        <p><b>為什麼結構性限制不顯著？</b><br>SC 與 PEOU、IC 相關較高（r = −.30、.46），放入同一模型後效果被兩者吸收，單獨看仍與意願負相關（r = −.17）</p>
+        <p><b>樣本都是親友，有代表性嗎？</b><br>承認便利抽樣的偏誤，樣本以 35–54 歲上班族為主，推論至其他族群需保守</p>
+      </div>
+    </figure>
+  </section>
+
   <!-- 3.1 樣本 -->
   <section class="chap">
     <h2>樣本描述 <small>3.1 SAMPLE</small></h2>
-    <figure class="card">
-      <div class="ft"><h3>樣本篩選流程</h3><span class="fig-no">圖 1</span></div>
+    <figure class="card" id="fig1">
+      <div class="ft"><h3>樣本篩選流程</h3><span class="fig-no">圖 1<span class="slide-tag">P5</span></span></div>
       <div class="chart" id="c-funnel"></div>
       <figcaption>問卷第一題為篩選題，回答「曾參加過」的 118 位受訪者直接導向結束頁。未參與者中再剔除 19 題量表全填同一分數的直線作答 3 筆、完全重複回應 2 筆，最終有效樣本為 <b>233</b> 份</figcaption>
     </figure>
     <div class="grid2">
-      <figure class="card">
-        <div class="ft"><h3>年齡分布</h3><span class="fig-no">圖 2a</span></div>
+      <figure class="card" id="fig2a">
+        <div class="ft"><h3>年齡分布</h3><span class="fig-no">圖 2a<span class="slide-tag">P6</span></span></div>
         <div class="chart" id="c-age"></div>
         <figcaption>樣本以 <b>35–54 歲</b>為主（64.8%），反映主要透過職場與親友網絡發放</figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>每週運動頻率</h3><span class="fig-no">圖 2b</span></div>
+      <figure class="card" id="fig2b">
+        <div class="ft"><h3>每週運動頻率</h3><span class="fig-no">圖 2b<span class="slide-tag">P6</span></span></div>
         <div class="chart" id="c-freq"></div>
         <figcaption>七成以上受訪者每週運動 2 次以下，其中 <b>26.2%</b> 幾乎不運動，正是活動想觸及的族群</figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>職業類別</h3><span class="fig-no">圖 2c</span></div>
+      <figure class="card" id="fig2c">
+        <div class="ft"><h3>職業類別</h3><span class="fig-no">圖 2c<span class="slide-tag bk">備用</span></span></div>
         <div class="chart" id="c-job"></div>
         <figcaption>工商服務業過半（53.6%），學生比例偏低，結果推論至學生族群時需保守</figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>運動紀錄工具</h3><span class="fig-no">圖 2d</span></div>
+      <figure class="card" id="fig2d">
+        <div class="ft"><h3>運動紀錄工具</h3><span class="fig-no">圖 2d<span class="slide-tag bk">備用</span></span></div>
         <div class="chart" id="c-tracker"></div>
         <figcaption>超過半數（57.5%）只依靠手機內建計步，沒有額外使用 App 或穿戴裝置</figcaption>
       </figure>
@@ -221,23 +297,23 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
   <section class="chap">
     <h2>活動相關描述統計 <small>DESCRIPTIVES</small></h2>
     <div class="grid2">
-      <figure class="card">
-        <div class="ft"><h3>對活動的認知程度</h3><span class="fig-no">圖 3a</span></div>
+      <figure class="card" id="fig3a">
+        <div class="ft"><h3>對活動的認知程度</h3><span class="fig-no">圖 3a<span class="slide-tag">P7</span></span></div>
         <div class="chart" id="c-aware"></div>
         <figcaption>有 <b>20.6%</b> 的未參與者在填問卷前完全沒聽過這項活動</figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>得知活動的管道</h3><span class="fig-no">圖 3b</span></div>
+      <figure class="card" id="fig3b">
+        <div class="ft"><h3>得知活動的管道</h3><span class="fig-no">圖 3b<span class="slide-tag">P7</span></span></div>
         <div class="chart" id="c-channel"></div>
         <figcaption>社群媒體與親友推薦合計約四分之三，LINE 推播與實體文宣的觸及非常有限<span class="note">n = 185，排除未聽過者；「官方網站／新聞」已合併選項更名前後的回應</span></figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>最吸引的獎勵類型</h3><span class="fig-no">圖 3c</span></div>
+      <figure class="card" id="fig3c">
+        <div class="ft"><h3>最吸引的獎勵類型</h3><span class="fig-no">圖 3c<span class="slide-tag">P7</span></span></div>
         <div class="chart" id="c-reward"></div>
         <figcaption>超商禮券最受青睞（54.1%），與活動現行的超商兌換券設計一致</figcaption>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>阻礙題項平均分數</h3><span class="fig-no">圖 3d</span></div>
+      <figure class="card" id="fig3d">
+        <div class="ft"><h3>阻礙題項平均分數</h3><span class="fig-no">圖 3d<span class="slide-tag">P7</span></span></div>
         <div class="chart" id="c-barrier"></div>
         <figcaption>只有「沒時間運動」高於中間值 4。整體而言，外在的時間與流程負擔高於體能或信心等內在顧慮</figcaption>
         <dl class="crit">
@@ -250,8 +326,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
   <!-- 信效度 -->
   <section class="chap">
     <h2>信度與效度 <small>3.2 RELIABILITY &amp; VALIDITY</small></h2>
-    <figure class="card">
-      <div class="ft"><h3>各構面信度、收斂效度與描述統計</h3><span class="fig-no">表 1</span></div>
+    <figure class="card" id="tab1">
+      <div class="ft"><h3>各構面信度、收斂效度與描述統計</h3><span class="fig-no">表 1<span class="slide-tag">P8</span></span></div>
       <div class="scroll">
         <table>
           <thead><tr><th>構面</th><th>題數</th><th>M (SD)</th><th>Cronbach's α</th><th>CR</th><th>AVE</th><th>標準化負荷量</th><th>KMO</th></tr></thead>
@@ -276,8 +352,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
       </dl>
     </figure>
     <div class="grid2">
-      <figure class="card">
-        <div class="ft"><h3>驗證性因素分析配適度</h3><span class="fig-no">表 2</span></div>
+      <figure class="card" id="tab2">
+        <div class="ft"><h3>驗證性因素分析配適度</h3><span class="fig-no">表 2<span class="slide-tag bk">備用</span></span></div>
         <div class="scroll">
           <table>
             <thead><tr><th>指標</th><th>數值</th><th>建議標準</th><th>判定</th></tr></thead>
@@ -299,8 +375,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
           <dt>SRMR</dt><dd>實際相關與模型預測相關的平均落差</dd><dd class="std">越小越好</dd>
         </dl>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>構面相關矩陣</h3><span class="fig-no">圖 4</span></div>
+      <figure class="card" id="fig4">
+        <div class="ft"><h3>構面相關矩陣</h3><span class="fig-no">圖 4<span class="slide-tag bk">備用</span></span></div>
         <div class="chart" id="c-corr"></div>
         <figcaption>三個正向因素與參與意願呈中度至強正相關（.51–.63），兩個阻礙因素呈弱負相關，方向皆符合預期<span class="note">* p &lt; .05，*** p &lt; .001（Holm 校正）</span></figcaption>
         <dl class="crit">
@@ -314,8 +390,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
   <!-- 迴歸 -->
   <section class="chap">
     <h2>迴歸分析與假設檢定 <small>3.3 RESULTS</small></h2>
-    <figure class="card">
-      <div class="ft"><h3>研究模型檢定結果</h3><span class="fig-no">圖 5</span></div>
+    <figure class="card" id="fig5">
+      <div class="ft"><h3>研究模型檢定結果</h3><span class="fig-no">圖 5<span class="slide-tag">P9</span></span></div>
       <div class="chart scroll" id="c-model"></div>
       <figcaption>以階層式迴歸檢定，控制年齡、職業（學生）與規律運動。加入五個構面後 R² 由 .013 提升至 .525（ΔF = 48.17，p &lt; .001），再加入交互項僅增加 .003（p = .208）。最終模型 <b>R² = .528</b>、調整後 R² = .507</figcaption>
       <dl class="crit">
@@ -325,8 +401,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
       </dl>
     </figure>
     <div class="grid2">
-      <figure class="card">
-        <div class="ft"><h3>標準化迴歸係數與 95% 信賴區間</h3><span class="fig-no">圖 6</span></div>
+      <figure class="card" id="fig6">
+        <div class="ft"><h3>標準化迴歸係數與 95% 信賴區間</h3><span class="fig-no">圖 6<span class="slide-tag">P10</span></span></div>
         <div class="chart" id="c-beta"></div>
         <figcaption>社會規範的效果最強（β = .37），其次為感知易用性（β = .28）與感知好處（β = .19）。SC、IC 與交互項的信賴區間皆跨過 0</figcaption>
         <dl class="crit">
@@ -337,8 +413,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
           <dt>HC3</dt><dd>上述兩項未達時採用的穩健標準誤，本圖區間與 p 值皆依此計算</dd><dd class="std">結論不變</dd>
         </dl>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>內在阻礙的調節效果（H5）</h3><span class="fig-no">圖 7</span></div>
+      <figure class="card" id="fig7">
+        <div class="ft"><h3>內在阻礙的調節效果（H5）</h3><span class="fig-no">圖 7<span class="slide-tag">P10</span></span></div>
         <div class="chart" id="c-slope"></div>
         <figcaption>不論內在阻礙高低，感知好處對意願都有正向效果（低阻礙 b = .16，p = .044；高阻礙 b = .27，p &lt; .001），兩條斜率差異未達顯著，H5 不成立。內在阻礙並未削弱獎勵的吸引力</figcaption>
         <dl class="crit">
@@ -347,8 +423,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
         </dl>
       </figure>
     </div>
-    <figure class="card">
-      <div class="ft"><h3>假設檢定彙整</h3><span class="fig-no">表 3</span></div>
+    <figure class="card" id="tab3">
+      <div class="ft"><h3>假設檢定彙整</h3><span class="fig-no">表 3<span class="slide-tag">P9</span></span></div>
       <div class="scroll">
         <table>
           <thead><tr><th>假設</th><th>路徑</th><th>β</th><th>p</th><th>結果</th></tr></thead>
@@ -372,8 +448,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
   <section class="chap">
     <h2>組間比較 <small>ANOVA &amp; T-TEST</small></h2>
     <div class="grid2">
-      <figure class="card">
-        <div class="ft"><h3>活動認知程度與參與意願（ANOVA）</h3><span class="fig-no">圖 8</span></div>
+      <figure class="card" id="fig8">
+        <div class="ft"><h3>活動認知程度與參與意願（ANOVA）</h3><span class="fig-no">圖 8<span class="slide-tag">P11</span></span></div>
         <div class="chart" id="c-anova"></div>
         <figcaption>三組意願差異顯著，<b>F(2, 230) = 7.03，p = .001</b>。Tukey 事後檢定顯示「完全沒聽過」組顯著低於另外兩組，代表提升活動能見度有助於提高意願</figcaption>
         <dl class="crit">
@@ -382,8 +458,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
           <dt>Tukey</dt><dd>事後比較，找出哪兩組不同</dd><dd class="std">沒聽過 vs 知道內容 p &lt; .001 ✓<br>沒聽過 vs 聽過不了解 p = .040 ✓<br>聽過不了解 vs 知道內容 p = .443 ✗</dd>
         </dl>
       </figure>
-      <figure class="card">
-        <div class="ft"><h3>是否使用 App／穿戴裝置（t 檢定）</h3><span class="fig-no">圖 9</span></div>
+      <figure class="card" id="fig9">
+        <div class="ft"><h3>是否使用 App／穿戴裝置（t 檢定）</h3><span class="fig-no">圖 9<span class="slide-tag">P11</span></span></div>
         <div class="chart" id="c-ttest"></div>
         <figcaption>有使用紀錄工具者的參與意願較高，<b>Welch t(229.1) = 2.99，p = .003</b>。只靠手機計步的民眾是推廣時需要特別照顧的對象</figcaption>
         <dl class="crit">
@@ -391,8 +467,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
         </dl>
       </figure>
     </div>
-    <figure class="card">
-      <div class="ft"><h3>運動頻率與內在阻礙（ANOVA，補充）</h3><span class="fig-no">圖 10</span></div>
+    <figure class="card" id="fig10">
+      <div class="ft"><h3>運動頻率與內在阻礙（ANOVA，補充）</h3><span class="fig-no">圖 10<span class="slide-tag bk">備用</span></span></div>
       <div class="chart" id="c-icfreq"></div>
       <figcaption>運動頻率不影響參與意願（F = 0.94，p = .421），但與內在阻礙明顯相關，<b>F(3, 229) = 14.41，p &lt; .001</b>。幾乎不運動者的體能與信心顧慮最高，設計入門任務時應優先考量這群人</figcaption>
       <dl class="crit">
@@ -404,7 +480,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
   <!-- 建議 -->
   <section class="chap">
     <h2>結論與管理建議 <small>4. RECOMMENDATIONS</small></h2>
-    <figure class="card">
+    <figure class="card" id="recs">
+      <div class="ft"><h3>管理建議</h3><span class="fig-no"><span class="slide-tag">P12</span></span></div>
       <div class="recs">
         <div class="rec">
           <div class="ev">社會規範影響最大 <b>β = .37</b>；35.1% 經親友得知活動</div>
@@ -432,8 +509,8 @@ ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; d
         </div>
       </div>
     </figure>
-    <figure class="card">
-      <div class="ft"><h3>研究限制與無法推論之處</h3></div>
+    <figure class="card" id="limits">
+      <div class="ft"><h3>研究限制與無法推論之處</h3><span class="fig-no"><span class="slide-tag">P13</span></span></div>
       <ul class="lim">
         <li>參與意願僅以單一題項測量，且題意較接近態度，無法檢驗其信度；後續研究應採用三題以上的意願量表</li>
         <li>採便利抽樣，樣本集中於 35–54 歲上班族，結果不宜直接推論至全體未參與者</li>
