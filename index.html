@@ -578,7 +578,7 @@ function drawCorr() {
 function drawModel() {
   const host = document.getElementById('c-model');
   host.innerHTML = '';
-  const W = 860, H = 430;
+  const W = 860, H = 444;
   const s = E('svg', { viewBox: `0 0 ${W} ${H}`, style: 'min-width:640px', role: 'img', 'aria-label': '研究模型路徑圖與標準化係數' }, host);
   const defs = E('defs', {}, s);
   [['pos', 'var(--pos)'], ['ns', 'var(--ns)']].forEach(([k, col]) => {
@@ -617,18 +617,23 @@ function drawModel() {
   path('SN', 'β = .37***', true, .45);
   path('SC', 'β = .05 n.s.', false, .45);
   // 調節：IC 指向 PB→ITP 路徑
-  const mx = 455, my = ys.PB + bh / 2 + (ey + (ys.PB + bh / 2 - ey) * .18 - (ys.PB + bh / 2)) * .62 + 6;
-  E('path', { d: `M${bx + bw},${ys.IC + bh / 2} C${mx - 40},${ys.IC + bh / 2} ${mx},${ys.IC - 60} ${mx},${my + 8}`, fill: 'none', stroke: 'var(--ns)', 'stroke-width': 1.5, 'stroke-dasharray': '5 5', 'marker-end': 'url(#ah-ns)' }, s);
+  // 找出 PB→ITP 曲線上 t = .7 的點，讓調節箭頭落在該路徑上
+  const p0 = [bx + bw, ys.PB + bh / 2], p3 = [ex - 2, ey + (ys.PB + bh / 2 - ey) * .18];
+  const p1 = [p0[0] + 160, p0[1]], p2 = [p3[0] - 180, p3[1]], t = .7, u = 1 - t;
+  const bz = i => u ** 3 * p0[i] + 3 * u * u * t * p1[i] + 3 * u * t * t * p2[i] + t ** 3 * p3[i];
+  const mx = bz(0), my = bz(1);
+  E('path', { d: `M${bx + bw},${ys.IC + bh / 2} C${mx + 50},${ys.IC + bh / 2} ${mx + 20},${my + 110} ${mx},${my + 7}`, fill: 'none', stroke: 'var(--ns)', 'stroke-width': 1.5, 'stroke-dasharray': '5 5', 'marker-end': 'url(#ah-ns)' }, s);
+  E('circle', { cx: mx, cy: my, r: 3.5, fill: 'var(--ns)' }, s);
   const g = E('g', {}, s);
-  E('rect', { x: mx - 2, y: 300, width: 132, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
-  T(g, mx + 64, 313, 'H5 β = .05 n.s.', 'num', 'middle');
+  E('rect', { x: mx + 34, y: 318, width: 132, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
+  T(g, mx + 100, 331, 'H5 β = .05 n.s.', 'num', 'middle');
   // 控制變數
   const cg = E('g', { 'data-tip': '控制變數皆未達顯著（p > .5）' }, s);
   E('rect', { x: dx, y: 330, width: dw, height: 64, rx: 14, fill: 'none', stroke: 'var(--ns)', 'stroke-dasharray': '4 4' }, cg);
   T(cg, dx + dw / 2, 352, '控制變數', 'lbl-strong', 'middle');
   T(cg, dx + dw / 2, 374, '年齡組・學生・規律運動', 'axis', 'middle');
   E('path', { d: `M${dx + dw / 2},330 L${dx + dw / 2},${dy + dh + 4}`, stroke: 'var(--ns)', 'stroke-dasharray': '4 4', 'marker-end': 'url(#ah-ns)' }, s);
-  T(s, 40, 414, '* p < .05　*** p < .001　實線為顯著路徑，虛線為未達顯著；係數為標準化 β，p 值採 HC3 穩健標準誤', 'axis');
+  T(s, 40, 432, '* p < .05　*** p < .001　實線為顯著路徑，虛線為未達顯著；係數為標準化 β，p 值採 HC3 穩健標準誤', 'axis');
 }
 
 function drawBeta() {
