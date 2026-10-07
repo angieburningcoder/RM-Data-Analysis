@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>揮汗有禮實證圖表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout：單欄閱讀流，圖表依報告章節排列；小圖兩兩並排，手機改單欄。底層是幾團模糊的馬卡龍色光暈，內容卡片半透明。 */
+:root {
+  --bg: #F6F4F9;
+  --ink: #2E2B38;
+  --ink-2: #5C576B;
+  --muted: #8C869A;
+  --line: rgba(70, 60, 100, .12);
+  --card: rgba(255, 255, 255, .58);
+  --card-edge: rgba(255, 255, 255, .85);
+  --pos: #7088CF;      /* 正向驅動 */
+  --neg: #DE8A63;      /* 阻礙 */
+  --ns: #B7B2C2;       /* 不顯著 */
+  --pos-soft: rgba(112, 136, 207, .16);
+  --neg-soft: rgba(222, 138, 99, .16);
+  --m-pink: #F2D3DD;
+  --m-mint: #CDE8DE;
+  --m-lav: #DCD4F1;
+  --m-butter: #F3E6C3;
+  --m-sky: #D0DFF3;
+  --f-display: "Huninn", "Noto Sans TC", "PingFang TC", sans-serif;
+  --f-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --f-num: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1C1A22; --ink: #ECE8F3; --ink-2: #BCB5CA; --muted: #8C859B;
+    --line: rgba(255, 255, 255, .09); --card: rgba(42, 38, 52, .58); --card-edge: rgba(255, 255, 255, .07);
+    --pos: #7B92DA; --neg: #E0906A; --ns: #6C667A;
+    --pos-soft: rgba(123, 146, 218, .18); --neg-soft: rgba(224, 144, 106, .18);
+    --m-pink: #4A3341; --m-mint: #2C4640; --m-lav: #383152; --m-butter: #463F2C; --m-sky: #2C3A4F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1C1A22; --ink: #ECE8F3; --ink-2: #BCB5CA; --muted: #8C859B;
+  --line: rgba(255, 255, 255, .09); --card: rgba(42, 38, 52, .58); --card-edge: rgba(255, 255, 255, .07);
+  --pos: #7B92DA; --neg: #E0906A; --ns: #6C667A;
+  --pos-soft: rgba(123, 146, 218, .18); --neg-soft: rgba(224, 144, 106, .18);
+  --m-pink: #4A3341; --m-mint: #2C4640; --m-lav: #383152; --m-butter: #463F2C; --m-sky: #2C3A4F;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.75;
+  padding-inline: 16px; padding-block: 0 64px;
+  position: relative; overflow-x: hidden;
+}
+.haze { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.haze span { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .9; }
+.haze .a { width: 520px; height: 520px; background: var(--m-pink); top: -140px; left: -120px; }
+.haze .b { width: 460px; height: 460px; background: var(--m-mint); top: 30%; right: -160px; }
+.haze .c { width: 560px; height: 560px; background: var(--m-lav); bottom: -200px; left: 20%; }
+.haze .d { width: 300px; height: 300px; background: var(--m-butter); top: 12%; left: 45%; opacity: .6; }
+
+main { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+
+header.top { padding-block: 56px 8px; display: grid; gap: 14px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(28px, 5vw, 42px); line-height: 1.3; margin: 0; text-wrap: balance; }
+.lede { color: var(--ink-2); max-width: 62ch; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 12.5px; padding: 3px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-edge); color: var(--ink-2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.chip b { font-family: var(--f-num); font-weight: 500; color: var(--ink); }
+
+.legend-key { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--ink-2); }
+.legend-key i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+section.chap { display: grid; gap: 16px; }
+h2 { font-family: var(--f-display); font-weight: 400; font-size: 22px; margin: 18px 0 0; display: flex; align-items: baseline; gap: 10px; }
+h2 small { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); letter-spacing: .06em; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+
+figure.card {
+  margin: 0; min-width: 0;
+  background: var(--card); border: 1px solid var(--card-edge); border-radius: 18px;
+  backdrop-filter: blur(18px) saturate(1.1); -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  padding: 20px 22px 18px; display: grid; gap: 10px; align-content: start;
+}
+figure.card > .ft { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.fig-no { font-size: 12px; color: var(--muted); letter-spacing: .08em; font-family: var(--f-num); }
+figure h3 { margin: 0; font-size: 15.5px; font-weight: 700; }
+figcaption { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+figcaption b { color: var(--ink); font-weight: 500; }
+.note { font-size: 12px; color: var(--muted); }
+.chart { width: 100%; min-width: 0; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.scroll { overflow-x: auto; }
+
+svg text { font-family: var(--f-body); fill: var(--ink-2); font-size: 12.5px; }
+svg .num { font-family: var(--f-num); fill: var(--ink); font-size: 12px; }
+svg .axis { fill: var(--muted); font-size: 11px; font-family: var(--f-num); }
+svg .grid { stroke: var(--line); stroke-width: 1; }
+svg .refline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+svg .lbl-strong { fill: var(--ink); font-weight: 500; }
+.f-pos { fill: var(--pos); } .f-neg { fill: var(--neg); } .f-ns { fill: var(--ns); }
+.s-pos { stroke: var(--pos); } .s-neg { stroke: var(--neg); } .s-ns { stroke: var(--ns); }
+[data-tip] { cursor: default; }
+[data-tip]:hover { opacity: .82; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-weight: 500; color: var(--muted); font-size: 12.5px; }
+td.n { font-family: var(--f-num); font-size: 13px; }
+td.warn { color: var(--neg); }
+.pill { display: inline-block; font-size: 12px; padding: 1px 10px; border-radius: 999px; }
+.pill.ok { background: var(--pos-soft); color: var(--pos); }
+.pill.no { background: var(--neg-soft); color: var(--neg); }
+.pill.mid { background: var(--line); color: var(--ink-2); }
+
+.recs { display: grid; gap: 12px; }
+.rec { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.rec:last-child { border-bottom: 0; }
+.rec .ev { font-size: 13px; color: var(--ink-2); }
+.rec .ev b { font-family: var(--f-num); font-weight: 500; color: var(--ink); }
+.rec .do { font-size: 14.5px; }
+@media (max-width: 640px) { .rec { grid-template-columns: 1fr; gap: 6px; } }
+
+dl.crit {
+  margin: 0; padding-top: 10px; border-top: 1px dashed var(--line);
+  display: grid; grid-template-columns: max-content minmax(0, 1fr) minmax(0, max-content); gap: 5px 14px;
+  font-size: 12.5px; line-height: 1.6; color: var(--ink-2);
+}
+dl.crit dt { font-family: var(--f-num); color: var(--ink); font-weight: 500; }
+dl.crit dd { margin: 0; min-width: 0; }
+dl.crit dd.std { color: var(--ink); text-align: right; }
+@media (max-width: 520px) {
+  dl.crit { grid-template-columns: max-content minmax(0, 1fr); }
+  dl.crit dd.std { grid-column: 2; text-align: left; margin-top: -4px; }
+}
+.mk { font-style: normal; font-family: var(--f-body); font-size: 11.5px; margin-left: 3px; }
+.mk.ok { color: var(--pos); } .mk.mid { color: var(--muted); } .mk.no { color: var(--neg); }
+
+ul.lim { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14px; display: grid; gap: 4px; }
+
+#tip {
+  position: fixed; z-index: 10; pointer-events: none; max-width: 260px;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+  border-radius: 10px; padding: 7px 11px; font-size: 12.5px; line-height: 1.55;
+  box-shadow: 0 6px 24px rgba(40, 30, 70, .14);
+}
+:focus-visible { outline: 2px solid var(--pos); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  figure.card { transition: transform .25s ease; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="haze" aria-hidden="true"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
+
+<main>
+  <header class="top">
+    <div class="eyebrow">研究方法 期末專題 · 實證分析圖表</div>
+    <h1>哪些因素影響未參與者加入「揮汗有禮」？</h1>
+    <p class="lede">本研究以 TAM 與休閒阻礙理論為基礎，針對尚未參加活動的民眾，檢驗感知好處、感知易用性、社會規範、結構性限制與內在阻礙對參與意願的影響。以下圖表依報告章節排列，可直接截圖放入報告或簡報</p>
+    <div class="meta">
+      <span class="chip">有效樣本 <b>n = 233</b></span>
+      <span class="chip">收集期間 <b>2026/9/30–10/7</b></span>
+      <span class="chip">平台 Google Forms</span>
+      <span class="chip">量表 7 點 Likert</span>
+    </div>
+    <div class="legend-key">
+      <span><i style="background:var(--pos)"></i>正向驅動因素</span>
+      <span><i style="background:var(--neg)"></i>阻礙因素</span>
+      <span><i style="background:var(--ns)"></i>未達顯著</span>
+      <span><i class="mk ok">✓</i> 達標</span>
+      <span><i class="mk mid">△</i> 可接受／接近</span>
+      <span><i class="mk no">✗</i> 未達</span>
+    </div>
+  </header>
+
+  <!-- 3.1 樣本 -->
+  <section class="chap">
+    <h2>樣本描述 <small>3.1 SAMPLE</small></h2>
+    <figure class="card">
+      <div class="ft"><h3>樣本篩選流程</h3><span class="fig-no">圖 1</span></div>
+      <div class="chart" id="c-funnel"></div>
+      <figcaption>問卷第一題為篩選題，回答「曾參加過」的 118 位受訪者直接導向結束頁。未參與者中再剔除 19 題量表全填同一分數的直線作答 3 筆、完全重複回應 2 筆，最終有效樣本為 <b>233</b> 份</figcaption>
+    </figure>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>年齡分布</h3><span class="fig-no">圖 2a</span></div>
+        <div class="chart" id="c-age"></div>
+        <figcaption>樣本以 <b>35–54 歲</b>為主（64.8%），反映主要透過職場與親友網絡發放</figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>每週運動頻率</h3><span class="fig-no">圖 2b</span></div>
+        <div class="chart" id="c-freq"></div>
+        <figcaption>七成以上受訪者每週運動 2 次以下，其中 <b>26.2%</b> 幾乎不運動，正是活動想觸及的族群</figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>職業類別</h3><span class="fig-no">圖 2c</span></div>
+        <div class="chart" id="c-job"></div>
+        <figcaption>工商服務業過半（53.6%），學生比例偏低，結果推論至學生族群時需保守</figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>運動紀錄工具</h3><span class="fig-no">圖 2d</span></div>
+        <div class="chart" id="c-tracker"></div>
+        <figcaption>超過半數（57.5%）只依靠手機內建計步，沒有額外使用 App 或穿戴裝置</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 描述統計 活動 -->
+  <section class="chap">
+    <h2>活動相關描述統計 <small>DESCRIPTIVES</small></h2>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>對活動的認知程度</h3><span class="fig-no">圖 3a</span></div>
+        <div class="chart" id="c-aware"></div>
+        <figcaption>有 <b>20.6%</b> 的未參與者在填問卷前完全沒聽過這項活動</figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>得知活動的管道</h3><span class="fig-no">圖 3b</span></div>
+        <div class="chart" id="c-channel"></div>
+        <figcaption>社群媒體與親友推薦合計約四分之三，LINE 推播與實體文宣的觸及非常有限<span class="note">n = 185，排除未聽過者；「官方網站／新聞」已合併選項更名前後的回應</span></figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>最吸引的獎勵類型</h3><span class="fig-no">圖 3c</span></div>
+        <div class="chart" id="c-reward"></div>
+        <figcaption>超商禮券最受青睞（54.1%），與活動現行的超商兌換券設計一致</figcaption>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>阻礙題項平均分數</h3><span class="fig-no">圖 3d</span></div>
+        <div class="chart" id="c-barrier"></div>
+        <figcaption>只有「沒時間運動」高於中間值 4。整體而言，外在的時間與流程負擔高於體能或信心等內在顧慮</figcaption>
+        <dl class="crit">
+          <dt>平均分數</dt><dd>1 非常不同意至 7 非常同意，虛線 4 為中立</dd><dd class="std">&gt; 4 表示多數人認同</dd>
+        </dl>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 信效度 -->
+  <section class="chap">
+    <h2>信度與效度 <small>3.2 RELIABILITY &amp; VALIDITY</small></h2>
+    <figure class="card">
+      <div class="ft"><h3>各構面信度、收斂效度與描述統計</h3><span class="fig-no">表 1</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>構面</th><th>題數</th><th>M (SD)</th><th>Cronbach's α</th><th>CR</th><th>AVE</th><th>標準化負荷量</th><th>KMO</th></tr></thead>
+          <tbody>
+            <tr><td>參與意願 ITP</td><td class="n">1</td><td class="n">5.87 (1.34)</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+            <tr><td>社會規範 SN</td><td class="n">3</td><td class="n">5.50 (1.35)</td><td class="n">.890<i class="mk ok">✓</i></td><td class="n">.894<i class="mk ok">✓</i></td><td class="n">.739<i class="mk ok">✓</i></td><td class="n">.77–.90<i class="mk ok">✓</i></td><td class="n">.726<i class="mk ok">✓</i></td></tr>
+            <tr><td>感知易用性 PEOU</td><td class="n">3</td><td class="n">5.39 (1.25)</td><td class="n">.818<i class="mk ok">✓</i></td><td class="n">.827<i class="mk ok">✓</i></td><td class="n">.616<i class="mk ok">✓</i></td><td class="n">.67–.86<i class="mk ok">✓</i></td><td class="n">.690<i class="mk mid">△</i></td></tr>
+            <tr><td>感知好處 PB</td><td class="n">4</td><td class="n">4.83 (1.18)</td><td class="n">.678<i class="mk mid">△</i></td><td class="n">.687<i class="mk mid">△</i></td><td class="n">.363<i class="mk no">✗</i></td><td class="n">.43–.71<i class="mk mid">△</i></td><td class="n">.654<i class="mk mid">△</i></td></tr>
+            <tr><td>結構性限制 SC</td><td class="n">4</td><td class="n">4.06 (1.30)</td><td class="n">.661<i class="mk mid">△</i></td><td class="n">.695<i class="mk mid">△</i></td><td class="n">.381<i class="mk no">✗</i></td><td class="n">.46–.88<i class="mk mid">△</i></td><td class="n">.608<i class="mk mid">△</i></td></tr>
+            <tr><td>內在阻礙 IC</td><td class="n">4</td><td class="n">2.80 (1.34)</td><td class="n">.777<i class="mk ok">✓</i></td><td class="n">.783<i class="mk ok">✓</i></td><td class="n">.475<i class="mk no">✗</i></td><td class="n">.65–.77<i class="mk ok">✓</i></td><td class="n">.764<i class="mk ok">✓</i></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>五個多題構面的 α 介於 .66–.89，刪除任一題皆不會提高 α，因此全數保留。PB、SC、IC 的 AVE 未達 .50，但 CR 均高於 .60，依 Fornell 與 Larcker（1981）仍可接受其收斂效度。PB 第 2、3 題為反向題，分析前已轉向。全量表 KMO = .828，各構面 Bartlett 檢定 p &lt; .001 ✓</figcaption>
+      <dl class="crit">
+        <dt>α</dt><dd>同一構面的題目是否一致地測量同一件事</dd><dd class="std">≥ .70 ✓　.60–.70 △</dd>
+        <dt>CR</dt><dd>構面整體的組合信度</dd><dd class="std">≥ .70 ✓　.60–.70 △</dd>
+        <dt>AVE</dt><dd>題目變異被構面解釋的平均比例，代表收斂效度</dd><dd class="std">≥ .50 ✓</dd>
+        <dt>負荷量</dt><dd>每一題與所屬構面的關聯強度</dd><dd class="std">全部 ≥ .50 ✓　有題目低於 .50 △</dd>
+        <dt>KMO</dt><dd>資料是否適合進行因素分析</dd><dd class="std">≥ .70 ✓　.60–.70 △</dd>
+        <dt>Bartlett</dt><dd>題目之間是否有足夠的相關</dd><dd class="std">p &lt; .05 ✓</dd>
+      </dl>
+    </figure>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>驗證性因素分析配適度</h3><span class="fig-no">表 2</span></div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>指標</th><th>數值</th><th>建議標準</th><th>判定</th></tr></thead>
+            <tbody>
+              <tr><td>χ² / df</td><td class="n">2.13</td><td class="n">&lt; 3</td><td><span class="pill ok">✓ 達標</span></td></tr>
+              <tr><td>CFI</td><td class="n">.911</td><td class="n">&gt; .90</td><td><span class="pill ok">✓ 達標</span></td></tr>
+              <tr><td>TLI</td><td class="n">.891</td><td class="n">&gt; .90</td><td><span class="pill mid">△ 接近</span></td></tr>
+              <tr><td>RMSEA</td><td class="n">.070</td><td class="n">&lt; .08</td><td><span class="pill ok">✓ 達標</span></td></tr>
+              <tr><td>SRMR</td><td class="n">.084</td><td class="n">&lt; .08</td><td><span class="pill mid">△ 接近</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>五因子測量模型整體配適尚可，所有題項負荷量均達顯著（p &lt; .001）</figcaption>
+        <dl class="crit">
+          <dt>χ² / df</dt><dd>模型與資料的差距，已依自由度調整</dd><dd class="std">越小越好</dd>
+          <dt>CFI</dt><dd>相較於完全無關的基準模型改善多少</dd><dd class="std">越大越好</dd>
+          <dt>TLI</dt><dd>概念同 CFI，另外懲罰過於複雜的模型</dd><dd class="std">越大越好</dd>
+          <dt>RMSEA</dt><dd>平均每個自由度的近似誤差</dd><dd class="std">越小越好</dd>
+          <dt>SRMR</dt><dd>實際相關與模型預測相關的平均落差</dd><dd class="std">越小越好</dd>
+        </dl>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>構面相關矩陣</h3><span class="fig-no">圖 4</span></div>
+        <div class="chart" id="c-corr"></div>
+        <figcaption>三個正向因素與參與意願呈中度至強正相關（.51–.63），兩個阻礙因素呈弱負相關，方向皆符合預期<span class="note">* p &lt; .05，*** p &lt; .001（Holm 校正）</span></figcaption>
+        <dl class="crit">
+          <dt>r</dt><dd>兩構面的線性相關，介於 −1 到 1</dd><dd class="std">|r| &lt; .3 弱　.3–.5 中　&gt; .5 強</dd>
+          <dt>區別效度</dt><dd>構面的 √AVE 應大於它和其他構面的相關</dd><dd class="std">SN ✓ PEOU ✓ IC ✓ SC ✓ PB ✗（.602 &lt; .606）</dd>
+        </dl>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 迴歸 -->
+  <section class="chap">
+    <h2>迴歸分析與假設檢定 <small>3.3 RESULTS</small></h2>
+    <figure class="card">
+      <div class="ft"><h3>研究模型檢定結果</h3><span class="fig-no">圖 5</span></div>
+      <div class="chart scroll" id="c-model"></div>
+      <figcaption>以階層式迴歸檢定，控制年齡、職業（學生）與規律運動。加入五個構面後 R² 由 .013 提升至 .525（ΔF = 48.17，p &lt; .001），再加入交互項僅增加 .003（p = .208）。最終模型 <b>R² = .528</b>、調整後 R² = .507</figcaption>
+      <dl class="crit">
+        <dt>R²</dt><dd>模型能解釋參與意願差異的比例</dd><dd class="std">.528，解釋 52.8%</dd>
+        <dt>ΔR²</dt><dd>新加入的變數額外多解釋的部分</dd><dd class="std">p &lt; .05 才算有增益　五構面 ✓　交互項 ✗</dd>
+        <dt>β</dt><dd>標準化係數，可直接比較各因素影響大小</dd><dd class="std">p &lt; .05 為顯著</dd>
+      </dl>
+    </figure>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>標準化迴歸係數與 95% 信賴區間</h3><span class="fig-no">圖 6</span></div>
+        <div class="chart" id="c-beta"></div>
+        <figcaption>社會規範的效果最強（β = .37），其次為感知易用性（β = .28）與感知好處（β = .19）。SC、IC 與交互項的信賴區間皆跨過 0</figcaption>
+        <dl class="crit">
+          <dt>95% CI</dt><dd>係數可能的落點範圍</dd><dd class="std">跨過 0 即不顯著</dd>
+          <dt>VIF</dt><dd>自變數之間的共線性</dd><dd class="std">&lt; 5 ✓　本研究 1.29–1.69</dd>
+          <dt>殘差常態</dt><dd>Shapiro-Wilk 檢定</dd><dd class="std">p &gt; .05 ✓　本研究 p = .011 ✗</dd>
+          <dt>變異同質</dt><dd>Breusch-Pagan 檢定</dd><dd class="std">p &gt; .05 ✓　本研究 p &lt; .001 ✗</dd>
+          <dt>HC3</dt><dd>上述兩項未達時採用的穩健標準誤，本圖區間與 p 值皆依此計算</dd><dd class="std">結論不變</dd>
+        </dl>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>內在阻礙的調節效果（H5）</h3><span class="fig-no">圖 7</span></div>
+        <div class="chart" id="c-slope"></div>
+        <figcaption>不論內在阻礙高低，感知好處對意願都有正向效果（低阻礙 b = .16，p = .044；高阻礙 b = .27，p &lt; .001），兩條斜率差異未達顯著，H5 不成立。內在阻礙並未削弱獎勵的吸引力</figcaption>
+        <dl class="crit">
+          <dt>簡單斜率</dt><dd>IC 在低（−1 SD）與高（+1 SD）時，PB 對意願的影響</dd><dd class="std">p &lt; .05 為顯著</dd>
+          <dt>交互項</dt><dd>檢驗 IC 是否改變 PB 的效果</dd><dd class="std">p = .227 ✗</dd>
+        </dl>
+      </figure>
+    </div>
+    <figure class="card">
+      <div class="ft"><h3>假設檢定彙整</h3><span class="fig-no">表 3</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>假設</th><th>路徑</th><th>β</th><th>p</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><td>H1</td><td>感知好處 → 參與意願（+）</td><td class="n">.187</td><td class="n">.012</td><td><span class="pill ok">✓ 支持</span></td></tr>
+            <tr><td>H2</td><td>感知易用性 → 參與意願（+）</td><td class="n">.282</td><td class="n">&lt; .001</td><td><span class="pill ok">✓ 支持</span></td></tr>
+            <tr><td>H3</td><td>社會規範 → 參與意願（+）</td><td class="n">.370</td><td class="n">&lt; .001</td><td><span class="pill ok">✓ 支持</span></td></tr>
+            <tr><td>H4</td><td>結構性限制 → 參與意願（−）</td><td class="n">.046</td><td class="n">.381</td><td><span class="pill no">✗ 不支持</span></td></tr>
+            <tr><td>H5</td><td>內在阻礙 × 感知好處 → 參與意願</td><td class="n">.049</td><td class="n">.227</td><td><span class="pill no">✗ 不支持</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>結構性限制與意願的簡單相關雖顯著（r = −.17），但與感知易用性、內在阻礙高度相關，放入模型後效果被其他變數吸收。控制變數皆未達顯著</figcaption>
+      <dl class="crit">
+        <dt>p</dt><dd>假設不成立時仍觀察到此結果的機率</dd><dd class="std">p &lt; .05 支持假設</dd>
+      </dl>
+    </figure>
+  </section>
+
+  <!-- 組間比較 -->
+  <section class="chap">
+    <h2>組間比較 <small>ANOVA &amp; T-TEST</small></h2>
+    <div class="grid2">
+      <figure class="card">
+        <div class="ft"><h3>活動認知程度與參與意願（ANOVA）</h3><span class="fig-no">圖 8</span></div>
+        <div class="chart" id="c-anova"></div>
+        <figcaption>三組意願差異顯著，<b>F(2, 230) = 7.03，p = .001</b>。Tukey 事後檢定顯示「完全沒聽過」組顯著低於另外兩組，代表提升活動能見度有助於提高意願</figcaption>
+        <dl class="crit">
+          <dt>點與線</dt><dd>各組平均數與 95% 信賴區間</dd><dd class="std">區間不重疊代表差異明顯</dd>
+          <dt>F</dt><dd>組間差異相對於組內差異的大小</dd><dd class="std">p &lt; .05 ✓　本研究 p = .001</dd>
+          <dt>Tukey</dt><dd>事後比較，找出哪兩組不同</dd><dd class="std">沒聽過 vs 知道內容 p &lt; .001 ✓<br>沒聽過 vs 聽過不了解 p = .040 ✓<br>聽過不了解 vs 知道內容 p = .443 ✗</dd>
+        </dl>
+      </figure>
+      <figure class="card">
+        <div class="ft"><h3>是否使用 App／穿戴裝置（t 檢定）</h3><span class="fig-no">圖 9</span></div>
+        <div class="chart" id="c-ttest"></div>
+        <figcaption>有使用紀錄工具者的參與意願較高，<b>Welch t(229.1) = 2.99，p = .003</b>。只靠手機計步的民眾是推廣時需要特別照顧的對象</figcaption>
+        <dl class="crit">
+          <dt>Welch t</dt><dd>比較兩組平均，不假設兩組變異數相同</dd><dd class="std">p &lt; .05 ✓　本研究 p = .003</dd>
+        </dl>
+      </figure>
+    </div>
+    <figure class="card">
+      <div class="ft"><h3>運動頻率與內在阻礙（ANOVA，補充）</h3><span class="fig-no">圖 10</span></div>
+      <div class="chart" id="c-icfreq"></div>
+      <figcaption>運動頻率不影響參與意願（F = 0.94，p = .421），但與內在阻礙明顯相關，<b>F(3, 229) = 14.41，p &lt; .001</b>。幾乎不運動者的體能與信心顧慮最高，設計入門任務時應優先考量這群人</figcaption>
+      <dl class="crit">
+        <dt>F</dt><dd>同圖 8，p &lt; .05 為組間有差異</dd><dd class="std">參與意願 p = .421 ✗　內在阻礙 p &lt; .001 ✓</dd>
+      </dl>
+    </figure>
+  </section>
+
+  <!-- 建議 -->
+  <section class="chap">
+    <h2>結論與管理建議 <small>4. RECOMMENDATIONS</small></h2>
+    <figure class="card">
+      <div class="recs">
+        <div class="rec">
+          <div class="ev">社會規範影響最大 <b>β = .37</b>；35.1% 經親友得知活動</div>
+          <div class="do"><b>加入揪團與邀請機制。</b>邀請好友一起完成挑戰時雙方加碼點數，並開放分享完成畫面至社群，讓參與被身邊的人看見</div>
+        </div>
+        <div class="rec">
+          <div class="ev">感知易用性 <b>β = .28</b>；「紀錄後還要額外操作」平均 <b>3.97</b></div>
+          <div class="do"><b>簡化紀錄與上傳流程。</b>直接串接 Apple Health、Google Fit 與 Garmin 自動同步，減少手動上傳與重複驗證的步驟</div>
+        </div>
+        <div class="rec">
+          <div class="ev">無紀錄工具者意願較低 <b>p = .003</b>，且占樣本 <b>57.5%</b></div>
+          <div class="do"><b>讓手機內建計步就能參加。</b>降低對額外 App 或穿戴裝置的依賴，並在說明頁明確寫出「不需另購設備」</div>
+        </div>
+        <div class="rec">
+          <div class="ev">感知好處 <b>β = .19</b>；54.1% 偏好超商禮券</div>
+          <div class="do"><b>維持超商禮券為主要獎勵。</b>可增加通用點數作為第二選項，並在宣傳中具體寫出獎勵金額與兌換方式</div>
+        </div>
+        <div class="rec">
+          <div class="ev">20.6% 完全沒聽過活動，且該組意願最低 <b>p = .001</b></div>
+          <div class="do"><b>宣傳預算集中在社群媒體。</b>社群是最大得知管道（39.5%），LINE 推播（0.5%）與實體海報（1.6%）的觸及有限，可重新分配資源</div>
+        </div>
+        <div class="rec">
+          <div class="ev">幾乎不運動者內在阻礙最高 <b>M = 3.41</b>；SC 在模型中不顯著</div>
+          <div class="do"><b>提供低門檻入門任務。</b>例如每日 10 分鐘健走即可累積，宣傳時強調不需要好體能，不必為此大幅修改整體活動門檻</div>
+        </div>
+      </div>
+    </figure>
+    <figure class="card">
+      <div class="ft"><h3>研究限制與無法推論之處</h3></div>
+      <ul class="lim">
+        <li>參與意願僅以單一題項測量，且題意較接近態度，無法檢驗其信度；後續研究應採用三題以上的意願量表</li>
+        <li>採便利抽樣，樣本集中於 35–54 歲上班族，結果不宜直接推論至全體未參與者</li>
+        <li>問卷未蒐集性別資料，無法比較性別差異</li>
+        <li>內在阻礙題項聚焦於體能與自我效能，未涵蓋隱私疑慮，無法判斷健保卡驗證是否構成阻礙</li>
+        <li>橫斷面資料只能說明變數間的關聯，參與意願也不等同於實際參與行為</li>
+      </ul>
+    </figure>
+  </section>
+</main>
+
+<div id="tip" hidden></div>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+function E(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function T(parent, x, y, s, cls, anchor) {
+  const t = E('text', { x, y, class: cls || '', 'text-anchor': anchor || 'start', 'dominant-baseline': 'middle' }, parent);
+  t.textContent = s; return t;
+}
+function svgFor(host, h) {
+  host.innerHTML = '';
+  const w = Math.max(host.clientWidth, 280);
+  const s = E('svg', { viewBox: `0 0 ${w} ${h}`, height: h, role: 'img' }, host);
+  return [s, w];
+}
+const pct = v => v.toFixed(1) + '%';
+
+/* 水平長條圖：rows = [{label, v, pct?, tip?, cls?}] */
+function hbar(id, rows, o = {}) {
+  const host = document.getElementById(id);
+  const rowH = o.rowH || 32, top = o.ticks ? 20 : 4, h = top + rows.length * rowH + 6;
+  const [s, w] = svgFor(host, h);
+  const lw = o.labelW || Math.min(150, w * .34), vw = 70;
+  const x0 = lw + 10, x1 = w - vw;
+  const min = o.min ?? 0, max = o.max;
+  const sx = v => x0 + (v - min) / (max - min) * (x1 - x0);
+  if (o.ticks) o.ticks.forEach(t => { E('line', { x1: sx(t), x2: sx(t), y1: top - 4, y2: h - 4, class: 'grid' }, s); T(s, sx(t), 8, t, 'axis', 'middle'); });
+  if (o.ref != null) E('line', { x1: sx(o.ref), x2: sx(o.ref), y1: top - 4, y2: h - 4, class: 'refline' }, s);
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2;
+    T(s, lw, y, r.label, r.strong ? 'lbl-strong' : '', 'end');
+    const bw = Math.max(sx(r.v) - x0, 2);
+    E('rect', { x: x0, y: y - 7, width: bw, height: 14, rx: 4, class: 'f-' + (r.cls || o.cls || 'pos'), 'data-tip': r.tip || `${r.label}：${o.fmt ? o.fmt(r) : r.v}` }, s);
+    T(s, x0 + bw + 8, y, o.fmt ? o.fmt(r) : r.v, 'num');
+  });
+}
+
+/* 平均數 ± 95% CI 點圖 */
+function dotci(id, rows, o) {
+  const host = document.getElementById(id);
+  const rowH = 40, top = 22, h = top + rows.length * rowH + 4;
+  const [s, w] = svgFor(host, h);
+  const lw = o.labelW || Math.min(150, w * .34), x0 = lw + 14, x1 = w - 76;
+  const sx = v => x0 + (v - o.min) / (o.max - o.min) * (x1 - x0);
+  o.ticks.forEach(t => { E('line', { x1: sx(t), x2: sx(t), y1: top - 6, y2: h - 4, class: 'grid' }, s); T(s, sx(t), 8, t.toFixed(1), 'axis', 'middle'); });
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2, c = r.cls || o.cls || 'pos';
+    T(s, lw, y - 6, r.label, '', 'end');
+    T(s, lw, y + 9, 'n = ' + r.n, 'axis', 'end');
+    E('line', { x1: sx(r.m - r.half), x2: sx(r.m + r.half), y1: y, y2: y, class: 's-' + c, 'stroke-width': 2, 'stroke-linecap': 'round' }, s);
+    const g = E('g', { 'data-tip': `${r.label}｜M = ${r.m.toFixed(2)}，95% CI [${(r.m - r.half).toFixed(2)}, ${(r.m + r.half).toFixed(2)}]，n = ${r.n}` }, s);
+    E('rect', { x: sx(r.m - r.half) - 6, y: y - 14, width: sx(r.m + r.half) - sx(r.m - r.half) + 12, height: 28, fill: 'transparent' }, g);
+    E('circle', { cx: sx(r.m), cy: y, r: 6, class: 'f-' + c, stroke: 'var(--bg)', 'stroke-width': 2 }, g);
+    T(s, x1 + 12, y, r.m.toFixed(2), 'num');
+  });
+}
+
+function drawFunnel() {
+  hbar('c-funnel', [
+    { label: '原始回應', v: 356, tip: '原始回應 356 筆', cls: 'ns' },
+    { label: '未參與者', v: 238, tip: '剔除曾參加者 118 筆後剩 238 筆', cls: 'ns' },
+    { label: '有效樣本', v: 233, tip: '再剔除直線作答 3 筆、重複 2 筆，有效樣本 233 筆', strong: true },
+  ], { max: 356, rowH: 38, fmt: r => r.v + ' 筆' });
+}
+function drawProfile() {
+  const f = r => `${r.n}（${pct(r.v)}）`;
+  hbar('c-age', [
+    { label: '18 歲以下', n: 1, v: .4 }, { label: '18–24 歲', n: 24, v: 10.3 }, { label: '25–34 歲', n: 39, v: 16.7 },
+    { label: '35–44 歲', n: 90, v: 38.6 }, { label: '45–54 歲', n: 61, v: 26.2 }, { label: '55–64 歲', n: 12, v: 5.2 }, { label: '65 歲以上', n: 6, v: 2.6 },
+  ], { max: 45, fmt: f, labelW: 76, rowH: 28 });
+  hbar('c-freq', [
+    { label: '幾乎不運動', n: 61, v: 26.2 }, { label: '每週 1–2 次', n: 109, v: 46.8 },
+    { label: '每週 3–4 次', n: 48, v: 20.6 }, { label: '每週 5 次以上', n: 15, v: 6.4 },
+  ], { max: 55, fmt: f, labelW: 96 });
+  hbar('c-job', [
+    { label: '工商／服務業', n: 125, v: 53.6 }, { label: '軍警／公教', n: 33, v: 14.2 }, { label: '全職學生', n: 23, v: 9.9 },
+    { label: '其他', n: 20, v: 8.6 }, { label: '自由業／自營', n: 11, v: 4.7 }, { label: '家管', n: 9, v: 3.9 },
+    { label: '退休', n: 7, v: 3.0 }, { label: '待業中', n: 5, v: 2.1 },
+  ], { max: 60, fmt: f, labelW: 96, rowH: 26 });
+  hbar('c-tracker', [
+    { label: '只靠手機內建計步', n: 134, v: 57.5 }, { label: '智慧手環／手錶', n: 63, v: 27.0 }, { label: '手機運動 App', n: 36, v: 15.5 },
+  ], { max: 65, fmt: f, labelW: 120 });
+}
+function drawProgramme() {
+  const f = r => `${r.n}（${pct(r.v)}）`;
+  hbar('c-aware', [
+    { label: '知道內容', n: 115, v: 49.4 }, { label: '聽過但不了解', n: 70, v: 30.0 }, { label: '完全沒聽過', n: 48, v: 20.6, cls: 'neg' },
+  ], { max: 60, fmt: f, labelW: 96 });
+  hbar('c-channel', [
+    { label: '社群媒體', n: 73, v: 39.5 }, { label: '親友／同事推薦', n: 65, v: 35.1 }, { label: '官方網站／新聞', n: 38, v: 20.5 },
+    { label: '其他', n: 5, v: 2.7, cls: 'ns' }, { label: '實體文宣', n: 3, v: 1.6, cls: 'ns' }, { label: 'LINE 推播', n: 1, v: .5, cls: 'ns' },
+  ], { max: 45, fmt: f, labelW: 104, rowH: 28 });
+  hbar('c-reward', [
+    { label: '超商禮券', n: 126, v: 54.1 }, { label: '通用點數', n: 50, v: 21.5 }, { label: '高價值抽獎', n: 41, v: 17.6 }, { label: '運動用品券', n: 16, v: 6.9 },
+  ], { max: 62, fmt: f, labelW: 84 });
+  hbar('c-barrier', [
+    { label: '沒時間運動', v: 4.67, g: 'SC' }, { label: '紀錄操作負擔', v: 3.97, g: 'SC' }, { label: '缺乏場地資源', v: 3.90, g: 'SC' },
+    { label: '額外花費負擔', v: 3.72, g: 'SC' }, { label: '想到運動就累', v: 3.21, g: 'IC' }, { label: '沒信心完成', v: 2.81, g: 'IC' },
+    { label: '體能不足', v: 2.71, g: 'IC' }, { label: '擔心受傷', v: 2.45, g: 'IC' },
+  ].map(r => ({ ...r, cls: 'neg', label: `${r.label}（${r.g}）`, tip: `${r.label}｜${r.g === 'SC' ? '結構性限制' : '內在阻礙'}｜M = ${r.v.toFixed(2)}` })),
+  { min: 1, max: 7, ticks: [1, 4, 7], ref: 4, fmt: r => r.v.toFixed(2), labelW: 120, rowH: 28 });
+}
+
+function drawCorr() {
+  const host = document.getElementById('c-corr');
+  const L = ['ITP', 'PB', 'PEOU', 'SN', 'IC', 'SC'];
+  const R = [
+    [1], [.511, 1], [.580, .455, 1], [.630, .454, .550, 1], [-.248, -.185, -.251, -.193, 1], [-.174, -.196, -.298, -.188, .459, 1]];
+  const P = [[], ['***'], ['***', '***'], ['***', '***', '***'], ['***', '*', '***', '*'], ['*', '*', '***', '*', '***']];
+  const lw = 46, w0 = Math.max(host.clientWidth, 280);
+  const c = Math.min(62, (w0 - lw - 4) / 5);
+  const h = 5 * c + 26;
+  const [s] = svgFor(host, h);
+  for (let i = 1; i < 6; i++) {
+    T(s, lw - 8, (i - 1) * c + c / 2, L[i], 'axis', 'end');
+    for (let j = 0; j < i; j++) {
+      const r = R[i][j], x = lw + j * c, y = (i - 1) * c;
+      E('rect', { x: x + 1, y: y + 1, width: c - 2, height: c - 2, rx: 6, class: r > 0 ? 'f-pos' : 'f-neg', 'fill-opacity': (Math.abs(r) * .85 + .08).toFixed(2),
+        'data-tip': `${L[i]} × ${L[j]}：r = ${r.toFixed(3)}（${P[i][j] === '***' ? 'p < .001' : 'p < .05'}）` }, s);
+      T(s, x + c / 2, y + c / 2, r.toFixed(2).replace('0.', '.') + P[i][j], 'num', 'middle').style.fontSize = c < 50 ? '10px' : '11.5px';
+    }
+  }
+  for (let j = 0; j < 5; j++) T(s, lw + j * c + c / 2, 5 * c + 14, L[j], 'axis', 'middle');
+}
+
+function drawModel() {
+  const host = document.getElementById('c-model');
+  host.innerHTML = '';
+  const W = 860, H = 430;
+  const s = E('svg', { viewBox: `0 0 ${W} ${H}`, style: 'min-width:640px', role: 'img', 'aria-label': '研究模型路徑圖與標準化係數' }, host);
+  const defs = E('defs', {}, s);
+  [['pos', 'var(--pos)'], ['ns', 'var(--ns)']].forEach(([k, col]) => {
+    const m = E('marker', { id: 'ah-' + k, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+    E('path', { d: 'M0,0 L10,5 L0,10 z', fill: col }, m);
+  });
+  const box = (x, y, w, h, title, sub, cls, tip) => {
+    const g = E('g', { 'data-tip': tip }, s);
+    E('rect', { x, y, width: w, height: h, rx: 14, fill: cls === 'dv' ? 'var(--card)' : `var(--${cls}-soft)`, stroke: cls === 'dv' ? 'var(--ink-2)' : `var(--${cls})`, 'stroke-width': 1.5 }, g);
+    T(g, x + w / 2, y + h / 2 - 9, title, 'lbl-strong', 'middle').style.fontSize = '14px';
+    T(g, x + w / 2, y + h / 2 + 11, sub, 'axis', 'middle');
+    return g;
+  };
+  const bx = 40, bw = 190, bh = 58;
+  const ys = { PB: 30, PEOU: 110, SN: 190, SC: 270, IC: 350 };
+  box(bx, ys.PB, bw, bh, '感知好處 PB', 'H1（+）', 'pos', 'H1 支持：β = .187，p = .012');
+  box(bx, ys.PEOU, bw, bh, '感知易用性 PEOU', 'H2（+）', 'pos', 'H2 支持：β = .282，p < .001');
+  box(bx, ys.SN, bw, bh, '社會規範 SN', 'H3（+）', 'pos', 'H3 支持：β = .370，p < .001');
+  box(bx, ys.SC, bw, bh, '結構性限制 SC', 'H4（−）', 'neg', 'H4 不支持：β = .046，p = .381');
+  box(bx, ys.IC, bw, bh, '內在阻礙 IC', '調節變數', 'neg', '主效果 β = −.092，p = .101；H5 交互項 β = .049，p = .227');
+  const dx = 610, dy = 160, dw = 210, dh = 96;
+  box(dx, dy, dw, dh, '參與意願 ITP', 'R² = .528　adj. R² = .507', 'dv', '最終模型 R² = .528，F = 24.85，p < .001');
+  const ex = dx, ey = dy + dh / 2;
+  const path = (k, beta, sig, labelT) => {
+    const sy = ys[k] + bh / 2, sx = bx + bw;
+    const tx = ex - 2, ty = ey + (sy - ey) * .18;
+    const cls = sig ? 'pos' : 'ns';
+    E('path', { d: `M${sx},${sy} C${sx + 160},${sy} ${tx - 180},${ty} ${tx},${ty}`, fill: 'none', stroke: `var(--${cls})`, 'stroke-width': sig ? 2.2 : 1.5, 'stroke-dasharray': sig ? '' : '5 5', 'marker-end': `url(#ah-${cls})` }, s);
+    const lx = sx + (tx - sx) * labelT, ly = sy + (ty - sy) * labelT;
+    const g = E('g', {}, s);
+    E('rect', { x: lx - 44, y: ly - 12, width: 88, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
+    T(g, lx, ly + 1, beta, 'num', 'middle');
+  };
+  path('PB', 'β = .19*', true, .45);
+  path('PEOU', 'β = .28***', true, .45);
+  path('SN', 'β = .37***', true, .45);
+  path('SC', 'β = .05 n.s.', false, .45);
+  // 調節：IC 指向 PB→ITP 路徑
+  const mx = 455, my = ys.PB + bh / 2 + (ey + (ys.PB + bh / 2 - ey) * .18 - (ys.PB + bh / 2)) * .62 + 6;
+  E('path', { d: `M${bx + bw},${ys.IC + bh / 2} C${mx - 40},${ys.IC + bh / 2} ${mx},${ys.IC - 60} ${mx},${my + 8}`, fill: 'none', stroke: 'var(--ns)', 'stroke-width': 1.5, 'stroke-dasharray': '5 5', 'marker-end': 'url(#ah-ns)' }, s);
+  const g = E('g', {}, s);
+  E('rect', { x: mx - 2, y: 300, width: 132, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
+  T(g, mx + 64, 313, 'H5 β = .05 n.s.', 'num', 'middle');
+  // 控制變數
+  const cg = E('g', { 'data-tip': '控制變數皆未達顯著（p > .5）' }, s);
+  E('rect', { x: dx, y: 330, width: dw, height: 64, rx: 14, fill: 'none', stroke: 'var(--ns)', 'stroke-dasharray': '4 4' }, cg);
+  T(cg, dx + dw / 2, 352, '控制變數', 'lbl-strong', 'middle');
+  T(cg, dx + dw / 2, 374, '年齡組・學生・規律運動', 'axis', 'middle');
+  E('path', { d: `M${dx + dw / 2},330 L${dx + dw / 2},${dy + dh + 4}`, stroke: 'var(--ns)', 'stroke-dasharray': '4 4', 'marker-end': 'url(#ah-ns)' }, s);
+  T(s, 40, 414, '* p < .05　*** p < .001　實線為顯著路徑，虛線為未達顯著；係數為標準化 β，p 值採 HC3 穩健標準誤', 'axis');
+}
+
+function drawBeta() {
+  const host = document.getElementById('c-beta');
+  const rows = [
+    { k: 'SN 社會規範', b: .370, lo: .213, hi: .528, p: '< .001', sig: 1 },
+    { k: 'PEOU 易用性', b: .282, lo: .125, hi: .438, p: '< .001', sig: 1 },
+    { k: 'PB 感知好處', b: .187, lo: .041, hi: .333, p: '.012', sig: 1 },
+    { k: 'PB × IC', b: .049, lo: -.031, hi: .129, p: '.227', sig: 0 },
+    { k: 'SC 結構限制', b: .046, lo: -.057, hi: .148, p: '.381', sig: 0 },
+    { k: 'IC 內在阻礙', b: -.092, lo: -.203, hi: .018, p: '.101', sig: 0 },
+  ];
+  const rowH = 36, top = 22, h = top + rows.length * rowH + 4;
+  const [s, w] = svgFor(host, h);
+  const lw = Math.min(110, w * .3), x0 = lw + 14, x1 = w - 60;
+  const min = -.3, max = .6, sx = v => x0 + (v - min) / (max - min) * (x1 - x0);
+  [-.2, 0, .2, .4, .6].forEach(t => { E('line', { x1: sx(t), x2: sx(t), y1: top - 6, y2: h - 4, class: t === 0 ? 'refline' : 'grid' }, s); T(s, sx(t), 8, t === 0 ? '0' : t.toFixed(1).replace('0.', '.'), 'axis', 'middle'); });
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2, c = r.sig ? 'pos' : 'ns';
+    T(s, lw, y, r.k, r.sig ? 'lbl-strong' : '', 'end');
+    const g = E('g', { 'data-tip': `${r.k}｜β = ${r.b.toFixed(3)}，95% CI [${r.lo.toFixed(3)}, ${r.hi.toFixed(3)}]，p ${r.p.startsWith('<') ? r.p : '= ' + r.p}` }, s);
+    E('rect', { x: sx(r.lo) - 6, y: y - 14, width: sx(r.hi) - sx(r.lo) + 12, height: 28, fill: 'transparent' }, g);
+    E('line', { x1: sx(r.lo), x2: sx(r.hi), y1: y, y2: y, class: 's-' + c, 'stroke-width': 2, 'stroke-linecap': 'round' }, g);
+    E('circle', { cx: sx(r.b), cy: y, r: 6, class: 'f-' + c, stroke: 'var(--bg)', 'stroke-width': 2 }, g);
+    T(s, x1 + 10, y, r.b.toFixed(2).replace('0.', '.'), 'num');
+  });
+}
+
+function drawSlope() {
+  const host = document.getElementById('c-slope');
+  const h = 250;
+  const [s, w] = svgFor(host, h);
+  const x0 = 44, x1 = w - 104, y0 = 214, y1 = 16;
+  const ymin = 5.2, ymax = 6.4;
+  const sy = v => y0 - (v - ymin) / (ymax - ymin) * (y0 - y1);
+  [5.2, 5.6, 6.0, 6.4].forEach(t => { E('line', { x1: x0, x2: x1, y1: sy(t), y2: sy(t), class: 'grid' }, s); T(s, x0 - 8, sy(t), t.toFixed(1), 'axis', 'end'); });
+  T(s, x0, 236, '感知好處低（−1 SD）', 'axis', 'start');
+  T(s, x1, 236, '感知好處高（+1 SD）', 'axis', 'end');
+  const lines = [
+    { name: '內在阻礙低', a: 5.818, b: 6.188, cls: 'pos', tip: '內在阻礙低（−1 SD）：simple slope b = .157，p = .044' },
+    { name: '內在阻礙高', a: 5.438, b: 6.073, cls: 'neg', tip: '內在阻礙高（+1 SD）：simple slope b = .269，p < .001' },
+  ];
+  lines.forEach(L => {
+    const g = E('g', { 'data-tip': L.tip }, s);
+    E('line', { x1: x0, y1: sy(L.a), x2: x1, y2: sy(L.b), stroke: 'transparent', 'stroke-width': 16 }, g);
+    E('line', { x1: x0, y1: sy(L.a), x2: x1, y2: sy(L.b), class: 's-' + L.cls, 'stroke-width': 2, 'stroke-linecap': 'round' }, g);
+    [[x0, L.a], [x1, L.b]].forEach(([x, v]) => E('circle', { cx: x, cy: sy(v), r: 5, class: 'f-' + L.cls, stroke: 'var(--bg)', 'stroke-width': 2 }, g));
+    T(s, x0 - 0, sy(L.a) + (L.cls === 'pos' ? -14 : 14), L.a.toFixed(2), 'num', 'start');
+  });
+  T(s, x1 + 10, sy(6.188) - 8, '內在阻礙低', '', 'start');
+  T(s, x1 + 10, sy(6.188) + 8, '6.19', 'num', 'start');
+  T(s, x1 + 10, sy(6.073) + 10, '內在阻礙高', '', 'start');
+  T(s, x1 + 10, sy(6.073) + 26, '6.07', 'num', 'start');
+}
+
+function drawGroups() {
+  dotci('c-anova', [
+    { label: '知道內容', n: 115, m: 6.113, half: .223 },
+    { label: '聽過但不了解', n: 70, m: 5.871, half: .306 },
+    { label: '完全沒聽過', n: 48, m: 5.271, half: .451, cls: 'neg' },
+  ], { min: 4.5, max: 6.5, ticks: [4.5, 5, 5.5, 6, 6.5], labelW: 96 });
+  dotci('c-ttest', [
+    { label: '有使用', n: 99, m: 6.152, half: .202 },
+    { label: '未使用', n: 134, m: 5.657, half: .258, cls: 'neg' },
+  ], { min: 4.5, max: 6.5, ticks: [4.5, 5, 5.5, 6, 6.5], labelW: 70 });
+  dotci('c-icfreq', [
+    { label: '幾乎不運動', n: 61, m: 3.410, half: .339 },
+    { label: '每週 1–2 次', n: 109, m: 2.890, half: .231 },
+    { label: '每週 3–4 次', n: 48, m: 1.870, half: .326 },
+    { label: '每週 5 次以上', n: 15, m: 2.567, half: .730 },
+  ], { min: 1, max: 4.5, ticks: [1, 2, 3, 4], labelW: 100, cls: 'neg' });
+}
+
+function drawAll() { drawFunnel(); drawProfile(); drawProgramme(); drawCorr(); drawModel(); drawBeta(); drawSlope(); drawGroups(); }
+drawAll();
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
+
+/* 提示框 */
+const tip = document.getElementById('tip');
+document.addEventListener('pointermove', e => {
+  const t = e.target.closest && e.target.closest('[data-tip]');
+  if (!t) { tip.hidden = true; return; }
+  tip.textContent = t.getAttribute('data-tip');
+  tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+});
+document.addEventListener('pointerleave', () => { tip.hidden = true; });
+</script>
+
+</body>
+</html>
