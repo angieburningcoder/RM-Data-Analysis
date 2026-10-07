@@ -625,8 +625,8 @@ function drawModel() {
   E('path', { d: `M${bx + bw},${ys.IC + bh / 2} C${mx + 50},${ys.IC + bh / 2} ${mx + 20},${my + 110} ${mx},${my + 7}`, fill: 'none', stroke: 'var(--ns)', 'stroke-width': 1.5, 'stroke-dasharray': '5 5', 'marker-end': 'url(#ah-ns)' }, s);
   E('circle', { cx: mx, cy: my, r: 3.5, fill: 'var(--ns)' }, s);
   const g = E('g', {}, s);
-  E('rect', { x: mx + 34, y: 318, width: 132, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
-  T(g, mx + 100, 331, 'H5 β = .05 n.s.', 'num', 'middle');
+  E('rect', { x: mx - 168, y: 318, width: 132, height: 24, rx: 12, fill: 'var(--bg)', stroke: 'var(--line)' }, g);
+  T(g, mx - 102, 331, 'H5 β = .05 n.s.', 'num', 'middle');
   // 控制變數
   const cg = E('g', { 'data-tip': '控制變數皆未達顯著（p > .5）' }, s);
   E('rect', { x: dx, y: 330, width: dw, height: 64, rx: 14, fill: 'none', stroke: 'var(--ns)', 'stroke-dasharray': '4 4' }, cg);
